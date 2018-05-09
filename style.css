@@ -1,0 +1,129 @@
+*{
+	margin: 0;
+	padding: 0;
+	font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
+}
+
+.container{
+	width: 400px;
+	height: 300px;
+	margin: 0 auto;
+}
+
+.calendar{
+	color: #45a49e;
+	box-sizing: border-box;
+	border-right: 3px solid #66fcf1;
+	border-radius: 7%;
+	position: relative;
+	width: 100%;	
+	background-color: #0b0c10;
+}
+
+.calendar-head{
+	position: relative;
+	text-align: center;
+	padding-top: 14px;
+	height: 50px;
+}
+
+.calendar-month{
+	position: relative;
+	bottom: 10px;
+	display: inline-block;
+	margin-right: 25px;
+	font-size: 20px;
+}
+
+.calendar-year{
+	position: relative;
+	bottom: 6px;
+	display: inline-block;
+	font-size: 33px;
+	margin-top: 20px;
+}
+
+.calendar-btn{
+	padding-top: 14px;
+	display: inline-block;
+	position: absolute;
+	top: 10px;
+}
+.calendar-btn:hover{
+	cursor:pointer;
+}
+
+.left-button{	
+	left: 10px;
+}
+
+.right-button{
+	right: 10px;
+}
+
+.left-button img{
+	width: 40px;
+}
+
+.right-button img{
+	width: 40px;
+}
+
+.main-table{
+	margin-top: 5px;
+	width: 100%;
+	text-align: center;
+}
+
+.days td{
+	border-right: 1px solid #66fcf1;
+	padding-bottom: 7px;
+	padding-top: 7px;
+}
+
+.days td:last-child{
+	border-right: none;
+}
+
+.calendar-day{
+	font-weight: bold;
+	padding-bottom: 8px;
+	padding-top: 10px;
+}
+
+.calendar-day:hover{
+	cursor:pointer;
+}
+
+.calendar-today{
+	background-color: #1f2833;
+}
+
+.day-selected{
+	color: #0b0c10;
+	background: #c5c6c7;
+	box-sizing: border-box;
+}
+
+.calendar-head, .days td:hover{
+	cursor: default;
+}
+
+.run{
+	box-sizing: border-box;
+	width: 60px;
+	height: 30px;
+	border-radius: 6px ;
+	background-color: #6F1E51;
+	position: absolute;
+	left: 50px;
+	top: 20px;
+	text-align: center;
+	color:#fff;
+	font-weight: bold;
+	padding-top: 6px;
+}
+
+.run:hover{
+	cursor:pointer;
+}
