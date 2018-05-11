@@ -1,7 +1,7 @@
 window.onload = function() {
 	class Calendar{
 		constructor(id){			
-			this.d = new Date();											//date wich calendar will show
+			this.d = new Date();										//date wich calendar will show
 			this.d = new Date(this.d.getFullYear(), this.d.getMonth(), 1)//first date in month
 			this.parentID = id;
 			this.today = (new Date).getDate();				
@@ -9,14 +9,14 @@ window.onload = function() {
 			this.firstweekday = (new Date(this.d.getFullYear(), this.d.getMonth(), 1)).getDay();
 
 			this.rd = new Date();										//date wich represent current day
-			this.rMonth = this.rd.getMonth();//month wich represent current day
-			this.rYear = this.rd.getFullYear();//year wich represent current day
+			this.rMonth = this.rd.getMonth();				//month wich represent current day
+			this.rYear = this.rd.getFullYear();			//year wich represent current day
 
-			this.head = ``;		//head of calendar body
+			this.head = ``;													//head of calendar body
 			this.drawToDom(id);
 
-			this.eventList = []; // array which will save users events to trace
-			this.numbersList = [];//numbers that user clicked
+			this.eventList = []; 										// array which will save users events to trace
+			this.numbersList = [];									//numbers that user clicked
 		}
 
 		/**
@@ -87,11 +87,11 @@ window.onload = function() {
 			var lastdays = 1; // variable to write last cells with days in next month
 			var r = 0;
 
-			var d2 = new Date(this.d.getFullYear(), this.d.getMonth(), 1);			//temp date object for manipulation
+			var d2 = new Date(this.d.getFullYear(), this.d.getMonth(), 1);									//temp date object for manipulation
 			var prevlastday = new Date(this.d.getFullYear(), this.d.getMonth(), 0).getDate();//last day of previous month
 			var i1 = 0;//iterator of last days
 
-			this.lastDay = (new Date(this.d.getFullYear(), this.d.getMonth()+1, 0)).getDate();//lastDay will be different for every month
+			this.lastDay = (new Date(this.d.getFullYear(), this.d.getMonth()+1, 0)).getDate();	//lastDay will be different for every month
 			this.firstweekday = (new Date(this.d.getFullYear(), this.d.getMonth(), 1)).getDay();//firstweekday will be different for every month
 
 
@@ -99,12 +99,13 @@ window.onload = function() {
 				var tr = document.createElement('tr');
 				tr.classList.add('days-line');
 				var i = 0;
+				
 				while (i<7) {				
 					var td = document.createElement('td');
 					td.classList.add('calendar-day');
 							if (r==0){														//if its first row
 								if(i<this.firstweekday){						//if the week doesn't begin on Sunday
-								td.innerHTML = prevlastday+i1-1;	//ads last days of previous month
+								td.innerHTML = prevlastday+i1-1;		//ads last days of previous month
 								td.classList.add('calendar-day');
 								td.classList.add('calendar-gray');
 								i1++;
@@ -133,13 +134,15 @@ window.onload = function() {
 
 								var td2 = document.createElement('td');
 
-								if (this.equalDate(d2, this.rd)) {td.classList.add('calendar-today');}//highlight if its today
 								if (d2.getDate()==0){td.classList.add('calendar-red'); td.setAttribute('sunday', 'yes');}//if its sunday it'll be red
+								if (this.equalDate(d2, this.rd)) {td.classList.add('calendar-today');}//highlight if its today
+								
 
 								td2.classList.add('calendar-day')
 								td2.innerHTML = d2.getDate();
+
+								if (d2.getDay()==0){td2.classList.add('calendar-red'); td2.setAttribute('sunday', 'yes');}		//if its sunday it'll be red								
 								if (d2.getDate()-1 == this.today && d2.getMonth() == this.rMonth) {td2.classList.add('calendar-today');}//highlight if its today
-								if (d2.getDay()==0){td2.classList.add('calendar-red'); td2.setAttribute('sunday', 'yes');}		//if its sunday it'll be red
 
 								if (tr.cells.length == 7){						//if this week is already full it days will be printed in next row
 									tr = document.createElement('tr');
@@ -225,7 +228,11 @@ window.onload = function() {
 					if(k.classList.contains('day-selected')){					//find and remove previous selected cell
 						if ( new Date(c.d.getFullYear(), c.d.getMonth(), k.innerHTML).getDay() == 0 ) {	//if highlighted element was sunday day
 							k.className = 'calendar-day calendar-red';
-						}else{
+						}else if((new Date(c.d.getFullYear(), c.d.getMonth(), k.innerHTML).getDate() == c.d.getDate())){//if highlighted element was today
+							k.className = 'calendar-day calendar-today';
+						}
+
+						else{
 							k.className = 'calendar-day';
 						}
 					}
@@ -241,7 +248,9 @@ window.onload = function() {
 		if (target.tagName=='TD' && target.innerHTML.length!=3 && !target.classList.contains('calendar-gray')) {		//whole table or days above wont be highlighted
 			target.className=('calendar-day day-selected');
 
-			if (highlightedEl.innerHTML == c.rd.getDate()  &&  c.d.getMonth() == c.rMonth && c.rYear==c.d.getFullYear()) {//if highlighted element was current day
+ 			if ( new Date(c.d.getFullYear(), c.d.getMonth(), highlightedEl.innerHTML).getDay() == 0 ) {	//if highlighted element was sunday day
+				highlightedEl.className = 'calendar-day calendar-red';
+			}	else if (highlightedEl.innerHTML == c.rd.getDate()  &&  c.d.getMonth() == c.rMonth && c.rYear==c.d.getFullYear()) {//if highlighted element was current day
 				highlightedEl.className=('calendar-day calendar-today');
 			}else if ( new Date(c.d.getFullYear(), c.d.getMonth(), highlightedEl.innerHTML).getDay() == 0 ) {	//if highlighted element was sunday day
 				highlightedEl.className = 'calendar-day calendar-red';
