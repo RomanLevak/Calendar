@@ -10,10 +10,21 @@
 	margin: 0 auto;
 }
 
+.calendar-gray{
+	font-weight: bold;
+	padding-bottom: 8px;
+	padding-top: 10px;
+	color: #636e72;
+}
+
+.calendar-red{
+	color: #ff7675;
+}
+
 .calendar{
 	color: #45a49e;
 	box-sizing: border-box;
-	border-right: 3px solid #66fcf1;
+	border: 3px solid #66fcf1;
 	border-radius: 7%;
 	position: relative;
 	width: 100%;	

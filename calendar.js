@@ -5,7 +5,6 @@ window.onload = function() {
 			this.d = new Date(this.d.getFullYear(), this.d.getMonth(), 1)//first date in month
 			this.parentID = id;
 			this.today = (new Date).getDate();				
-			this.currentMonth = this.d.getMonth();		//month wich calendar will show
 			this.lastDay = (new Date(this.d.getFullYear(), this.d.getMonth()+1, 0)).getDate();  //last day in current month
 			this.firstweekday = (new Date(this.d.getFullYear(), this.d.getMonth(), 1)).getDay();
 
@@ -85,11 +84,16 @@ window.onload = function() {
 			const el = document.getElementById(id);
 			this.drawHead(id);					
 			const tab = document.getElementById('main');
+			var lastdays = 1; // variable to write last cells with days in next month
 			var r = 0;
 
 			var d2 = new Date(this.d.getFullYear(), this.d.getMonth(), 1);			//temp date object for manipulation
+			var prevlastday = new Date(this.d.getFullYear(), this.d.getMonth(), 0).getDate();//last day of previous month
+			var i1 = 0;//iterator of last days
+
 			this.lastDay = (new Date(this.d.getFullYear(), this.d.getMonth()+1, 0)).getDate();//lastDay will be different for every month
 			this.firstweekday = (new Date(this.d.getFullYear(), this.d.getMonth(), 1)).getDay();//firstweekday will be different for every month
+
 
 			while(d2.getDate()!=this.lastDay){
 				var tr = document.createElement('tr');
@@ -100,46 +104,87 @@ window.onload = function() {
 					td.classList.add('calendar-day');
 							if (r==0){														//if its first row
 								if(i<this.firstweekday){						//if the week doesn't begin on Sunday
-									td.innerHTML = '';
-
+								td.innerHTML = prevlastday+i1-1;	//ads last days of previous month
+								td.classList.add('calendar-day');
+								td.classList.add('calendar-gray');
+								i1++;
 							}else{
 									if (this.equalDate(d2, this.rd)) {td.classList.add('calendar-today');}//highlight if its today
+									if (d2.getDay()==0){td.classList.add('calendar-red'); td.setAttribute('sunday', 'yes');}
+
 									td.innerHTML = d2.getDate();
 									d2.setDate(d2.getDate()+1);
 								}
 							}else{
 								if (this.equalDate(d2, this.rd)) {td.classList.add('calendar-today');}//highlight if its today
+								if (d2.getDay()==0){td.className = 'calendar-red calendar-day'; td.setAttribute('sunday', 'yes');}
+
 								td.innerHTML = d2.getDate();
 								d2.setDate(d2.getDate()+1);
 							}
+
 							tr.appendChild(td);
 							i++;
 
 							if (d2.getDate()==this.lastDay) {	
+
 								td.innerHTML = d2.getDate()-1;
 								tr.appendChild(td);
+
 								var td2 = document.createElement('td');
 
-								if (d2.getDate()-1 == this.today && d2.getMonth() == this.rMonth) {td.classList.add('calendar-today');}//highlight if its today
+								if (this.equalDate(d2, this.rd)) {td.classList.add('calendar-today');}//highlight if its today
+								if (d2.getDate()==0){td.classList.add('calendar-red'); td.setAttribute('sunday', 'yes');}//if its sunday it'll be red
 
 								td2.classList.add('calendar-day')
 								td2.innerHTML = d2.getDate();
 								if (d2.getDate()-1 == this.today && d2.getMonth() == this.rMonth) {td2.classList.add('calendar-today');}//highlight if its today
+								if (d2.getDay()==0){td2.classList.add('calendar-red'); td2.setAttribute('sunday', 'yes');}		//if its sunday it'll be red
+
+								if (tr.cells.length == 7){						//if this week is already full it days will be printed in next row
+									tr = document.createElement('tr');
+								}
+
 								tr.appendChild(td2);
+
+								if (d2.getDay()!=6) {								
+									for (let j = d2.getDay(); j < 6; j++) {
+										var td = document.createElement('td');
+										td.innerHTML = lastdays;										//ads last days of previous month
+										lastdays++;
+										td.classList.add('calendar-day');
+										td.classList.add('calendar-gray');
+										tr.appendChild(td);
+									}
+								}
 								break;
 							}
 						}
 						tab.appendChild(tr);
 						r++;
 					}
+
+					while (tab.rows.length!=7) {
+						var tr = document.createElement('tr');
+						for (var i = 0; i < 7; i++) {
+							var td = document.createElement('td');
+							td.innerHTML = lastdays;										//ads last days of previous month
+							td.classList.add('calendar-day');
+								td.classList.add('calendar-gray');
+							lastdays++;
+							tr.appendChild(td);
+						}
+						tab.appendChild(tr);
+					}
+
 					el.innerHTML+=`</div>`;	
 					document.getElementById('btnright').addEventListener('click', moveRight);//adds events for clicks
 					document.getElementById('btnleft').addEventListener('click', moveLeft);
 					document.getElementById('main').addEventListener('click', highlight);
 				}
-	}
+			}
 
-	const c = new Calendar('container');
+			const c = new Calendar('container');
 
 	/**
 	*Sets the date to next month and redraw the calendar
@@ -166,37 +211,48 @@ window.onload = function() {
 	*/
 	var highlightedEl = 0;																			//keeps previous selected element
 	function highlight (event, num) {
-		if (event.target!=undefined) {var target = event.target}
+		var target = event.target;
 
-			if((typeof event[0]) == 'string'){
-				var cells = document.querySelectorAll('.calendar-day');
-				console.log(cells);
-				
-				for(let k of cells){
+		if (target && target.classList.contains('day-selected')) {				//if the element is already selected
+			return;
+		}
+
+		if((typeof event[0]) == 'string'){
+			var cells = document.querySelectorAll('.calendar-day');
+			console.log(cells);
+
+			for(let k of cells){
 					if(k.classList.contains('day-selected')){					//find and remove previous selected cell
-						k.className = 'calendar-day';
+						if ( new Date(c.d.getFullYear(), c.d.getMonth(), k.innerHTML).getDay() == 0 ) {	//if highlighted element was sunday day
+							k.className = 'calendar-day calendar-red';
+						}else{
+							k.className = 'calendar-day';
+						}
 					}
 				}	
 
 				for (let c  of cells) {															//bypassing all cells in main table
-					if (c.innerHTML == event) {
+					if (c.innerHTML == event  && !c.classList.contains('calendar-gray')) {
 						c.className+=' day-selected';
 					}
 				}
 			}
 
-		if (target.tagName=='TD' && target.innerHTML!='') {		//whole table and empty cells wont be highlighted
-			target.className+=(' day-selected');
-			
+		if (target.tagName=='TD' && target.innerHTML.length!=3 && !target.classList.contains('calendar-gray')) {		//whole table or days above wont be highlighted
+			target.className=('calendar-day day-selected');
+
 			if (highlightedEl.innerHTML == c.rd.getDate()  &&  c.d.getMonth() == c.rMonth && c.rYear==c.d.getFullYear()) {//if highlighted element was current day
 				highlightedEl.className=('calendar-day calendar-today');
-			}else{
-				highlightedEl.className=('calendar-day');
+			}else if ( new Date(c.d.getFullYear(), c.d.getMonth(), highlightedEl.innerHTML).getDay() == 0 ) {	//if highlighted element was sunday day
+				highlightedEl.className = 'calendar-day calendar-red';
 			}
+			else{
+				highlightedEl.className = ('calendar-day');
+			}
+
 			highlightedEl = target;
-			c.eventList.push(highlight);				//ads this event to event list
+			c.eventList.push(highlight);					//ads this event to event list
 			c.numbersList.push(target.innerHTML);//ads the number of highlited element
-			console.log(c.numbersList);
 		}
 	}
 
@@ -208,5 +264,5 @@ window.onload = function() {
 		for(let i = 0; i<c.eventList.length; i++){
 				setTimeout(c.eventList[i], 1000+i*1000,  [c.numbersList[i]]);//if it was highlight event it will take last argument
 			}
+		}
 	}
-}
