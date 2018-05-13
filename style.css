@@ -23,7 +23,7 @@ body{
 }
 
 .calendar-red{
-	color: #ff7675;
+	color: #c23616;
 }
 
 .calendar{
@@ -112,12 +112,20 @@ body{
 }
 
 .calendar-today{
-	background-color: #1f2833;
+	background-color: #1f1f1f;
+	border-radius: 20%;
 }
 
 .day-selected{
-	color: #0b0c10;
-	background: #c5c6c7;
+	background: #00172d;
+	border-radius: 20%;
+	box-sizing: border-box;
+}
+
+.sunday-selected{
+	color: #c23616;
+	background: #00172d;
+	border-radius: 20%;
 	box-sizing: border-box;
 }
 

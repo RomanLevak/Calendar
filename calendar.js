@@ -239,12 +239,18 @@ window.onload = function() {
 				for (let c  of cells) {															//bypassing all cells in main table
 					if (c.innerHTML == event  && !c.classList.contains('calendar-gray')) {
 						c.className+=' day-selected';
+						highlightedEl = c;															//saving this element as a previous highlighted
 					}
 				}
 			}
 
-		if (target.tagName=='TD' && target.innerHTML.length!=3 && !target.classList.contains('calendar-gray')) {		//whole table or days above wont be highlighted
-			target.className=('calendar-day day-selected');
+			if (target.tagName=='TD' && target.innerHTML.length!=3 && !target.classList.contains('calendar-gray')) {		//whole table or days above wont be highlighted
+			
+			if ( new Date(c.d.getFullYear(), c.d.getMonth(), target.innerHTML).getDay() == 0 ){
+				target.className = 'calendar-day sunday-selected';
+			}else{				
+				target.classList.add('day-selected');
+			}
 
 			highlightedEl.className = ('calendar-day');
 
@@ -255,7 +261,7 @@ window.onload = function() {
 			 	highlightedEl.classList.add('calendar-today');
 		  }
 
-			 highlightedEl = target;
+		  highlightedEl = target;
 			c.eventList.push(highlight);				 //ads this event to event list
 			c.numbersList.push(target.innerHTML);//ads the number of highlited element
 		}
