@@ -106,19 +106,20 @@ window.onload = function() {
 							if (r==0){														//if its first row
 								if(i<this.firstweekday){						//if the week doesn't begin on Sunday
 								td.innerHTML = prevlastday+i1-1;		//ads last days of previous month
-								td.classList.add('calendar-day');
-								td.classList.add('calendar-gray');
-								i1++;
-							}else{
-									if (this.equalDate(d2, this.rd)) {td.classList.add('calendar-today');}//highlight if its today
-									if (d2.getDay()==0){td.classList.add('calendar-red'); td.setAttribute('sunday', 'yes');}
+							td.classList.add('calendar-day');
+							td.classList.add('calendar-gray');
+							i1++;
+						}else{
+									if (d2.getDay()==0){td.classList.add('calendar-red'); td.setAttribute('sunday', 'yes');}//if its sunday it'll be red
+									if (this.equalDate(d2, this.rd)) {td.classList.add('calendar-today');}//highlight if its today									
 
 									td.innerHTML = d2.getDate();
 									d2.setDate(d2.getDate()+1);
 								}
 							}else{
+								if (d2.getDay()==0){td.className = 'calendar-red calendar-day'; td.setAttribute('sunday', 'yes');}//if its sunday it'll be red
 								if (this.equalDate(d2, this.rd)) {td.classList.add('calendar-today');}//highlight if its today
-								if (d2.getDay()==0){td.className = 'calendar-red calendar-day'; td.setAttribute('sunday', 'yes');}
+								
 
 								td.innerHTML = d2.getDate();
 								d2.setDate(d2.getDate()+1);
@@ -173,7 +174,7 @@ window.onload = function() {
 							var td = document.createElement('td');
 							td.innerHTML = lastdays;										//ads last days of previous month
 							td.classList.add('calendar-day');
-								td.classList.add('calendar-gray');
+							td.classList.add('calendar-gray');
 							lastdays++;
 							tr.appendChild(td);
 						}
@@ -220,20 +221,17 @@ window.onload = function() {
 			return;
 		}
 
-		if((typeof event[0]) == 'string'){
+		if((typeof event[0]) == 'string'){																//if it was started with button run
 			var cells = document.querySelectorAll('.calendar-day');
 			console.log(cells);
 
 			for(let k of cells){
 					if(k.classList.contains('day-selected')){					//find and remove previous selected cell
+						k.className = ('calendar-day');
 						if ( new Date(c.d.getFullYear(), c.d.getMonth(), k.innerHTML).getDay() == 0 ) {	//if highlighted element was sunday day
 							k.className = 'calendar-day calendar-red';
-						}else if((new Date(c.d.getFullYear(), c.d.getMonth(), k.innerHTML).getDate() == c.d.getDate())){//if highlighted element was today
-							k.className = 'calendar-day calendar-today';
-						}
-
-						else{
-							k.className = 'calendar-day';
+						}if((new Date(c.d.getFullYear(), c.d.getMonth(), k.innerHTML).getDate() == c.d.getDate())){//if highlighted element was today
+							k.classList.add('calendar-today');
 						}
 					}
 				}	
@@ -248,19 +246,17 @@ window.onload = function() {
 		if (target.tagName=='TD' && target.innerHTML.length!=3 && !target.classList.contains('calendar-gray')) {		//whole table or days above wont be highlighted
 			target.className=('calendar-day day-selected');
 
- 			if ( new Date(c.d.getFullYear(), c.d.getMonth(), highlightedEl.innerHTML).getDay() == 0 ) {	//if highlighted element was sunday day
-				highlightedEl.className = 'calendar-day calendar-red';
-			}	else if (highlightedEl.innerHTML == c.rd.getDate()  &&  c.d.getMonth() == c.rMonth && c.rYear==c.d.getFullYear()) {//if highlighted element was current day
-				highlightedEl.className=('calendar-day calendar-today');
-			}else if ( new Date(c.d.getFullYear(), c.d.getMonth(), highlightedEl.innerHTML).getDay() == 0 ) {	//if highlighted element was sunday day
-				highlightedEl.className = 'calendar-day calendar-red';
-			}
-			else{
-				highlightedEl.className = ('calendar-day');
-			}
+			highlightedEl.className = ('calendar-day');
 
-			highlightedEl = target;
-			c.eventList.push(highlight);					//ads this event to event list
+ 			if ( new Date(c.d.getFullYear(), c.d.getMonth(), highlightedEl.innerHTML).getDay() == 0 ) {	//if highlighted element was sunday
+ 				highlightedEl.className = 'calendar-day calendar-red';
+ 			}	
+			if (highlightedEl.innerHTML == c.rd.getDate()  &&  c.d.getMonth() == c.rMonth && c.rYear==c.d.getFullYear()) {//if highlighted element was current day
+			 	highlightedEl.classList.add('calendar-today');
+		  }
+
+			 highlightedEl = target;
+			c.eventList.push(highlight);				 //ads this event to event list
 			c.numbersList.push(target.innerHTML);//ads the number of highlited element
 		}
 	}
